@@ -11,6 +11,10 @@ class Budget(models.Model):
 
     def __str__(self) -> str:
         return self.title + ': ' + str(self.owner)
+
+    def isUserParticipating(self, pk):
+        print(self.participants)
+        return pk in self.participants
     
 
 

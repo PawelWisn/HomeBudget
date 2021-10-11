@@ -20,8 +20,6 @@ class EntryViewSet(viewsets.ModelViewSet):
         isEntryOwner: ['destroy',]
     }
 
-
-
     @method_decorator(vary_on_headers('Authorization'))
     @method_decorator(cache_page(10))    
     def list(self, request, *args, **kwargs):
@@ -40,5 +38,19 @@ class BudgetViewSet(viewsets.ModelViewSet):
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
         AllowAny: ['create', 'list', 'retrieve'],
-        isBudgetOwner: ['destroy',]
+        isBudgetOwner: ['destroy','partial_update']
     }
+
+    @method_decorator(vary_on_headers('Authorization'))
+    @method_decorator(cache_page(0))
+    def list(self, request, *args, **kwargs):
+        x = super().list(request, *args, **kwargs)
+        return x
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.queryset.get(pk=kwargs.get('pk'))
+        new_username = request.data['new_user']
+        new_part = User.objects.get(username=new_username)
+        instance.participants.add(new_part)
+        data = self.get_serializer(instance).data
+        return Response(data)

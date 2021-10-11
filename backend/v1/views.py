@@ -2,7 +2,7 @@ from . import serializers
 from . import models
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from .permissions import ActionBasedPermission, LoggedIn
+from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -16,8 +16,16 @@ class EntryViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EntrySerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        AllowAny: ['create', 'list', 'retrieve']
+        AllowAny: ['create', 'list', 'retrieve'],
+        isEntryOwner: ['destroy',]
     }
+
+
+
+    @method_decorator(vary_on_headers('Authorization'))
+    @method_decorator(cache_page(10))    
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     @method_decorator(vary_on_headers('Authorization'))
     @method_decorator(cache_page(10))
@@ -31,5 +39,6 @@ class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BudgetSerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        AllowAny: ['create', 'list', 'retrieve']
+        AllowAny: ['create', 'list', 'retrieve'],
+        isBudgetOwner: ['destroy',]
     }

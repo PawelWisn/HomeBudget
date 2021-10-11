@@ -1,0 +1,27 @@
+version: '3'
+services:
+ backend:
+  build: ./backend
+  command: python manage.py runserver 0.0.0.0:8000
+  volumes:
+   - ./backend:/code
+  ports:
+   - "8000:8000"
+  depends_on:
+   - postgres
+ postgres:
+  image: postgres:13.4-alpine
+  ports:
+   - "5432"
+  volumes:
+   - postgres-data:/var/lib/postgresql/data
+  environment:
+   TZ: 'Europe/Warsaw'
+   PGTZ: 'Europe/Warsaw'
+   POSTGRES_DB: homebudget
+   POSTGRES_USER: hbadmin
+   POSTGRES_PASSWORD: GCxJV8Z3{n!fRq)3
+volumes:
+  postgres-data:
+  backend:
+

@@ -69,6 +69,7 @@ class BudgetTestCase(BaseTestCase):
         auth = f"JWT {token}"
 
         payload = {"title": "Budget1", "owner": user.id}
+        
         response = client.post('/budget/', payload)
         self.assertEqual(response.status_code, 401, msg=response.data)
         
@@ -88,6 +89,7 @@ class BudgetTestCase(BaseTestCase):
 
         payload = {"title": "Budget1", "owner": user.id}
 
+        #create
         response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
 
@@ -118,3 +120,30 @@ class BudgetTestCase(BaseTestCase):
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 204, msg=response.data)
         
+    def test_budget_can_be_shared(self):
+        user = self.create_user()
+        token = self.get_user_token()
+        auth = f"JWT {token}"
+
+        user_dict2 = {'username':'second_user', 'password':f"{random_password}"}
+        user2 = self.create_user(user_dict2)
+        token2 = self.get_user_token(user_dict2)
+        auth2 = f"JWT {token2}"
+
+        payload = {"title": "Budget1", "owner": user.id}
+        
+        #create
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+
+        budget_id = str(response.data['id'])
+        payload = {"new_user": user2.username}
+
+        #share
+        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth, content_type='application/json')
+        self.assertEqual(response.status_code, 200, msg=response.data)
+
+        #confirm access
+        response = client.get('/budget/', HTTP_AUTHORIZATION=auth2)
+        self.assertEqual(response.status_code, 200, msg=response.data)
+        self.assertEqual(len(response.data['results']), 1)

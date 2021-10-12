@@ -2,13 +2,13 @@ from . import serializers
 from . import models
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner
+from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner, CanAccessEntry
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from rest_framework.response import Response
-
+from django.db.models import Q
 
 
 class EntryViewSet(viewsets.ModelViewSet):
@@ -16,36 +16,40 @@ class EntryViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EntrySerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        AllowAny: ['create', 'list', 'retrieve'],
+        CanAccessEntry: ['create', 'retrieve'],
         isEntryOwner: ['destroy',]
     }
 
     @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(10))    
+    @method_decorator(cache_page(0))    
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(10))
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = serializers.UserSerializerNoPassword(instance)
-        return Response(serializer.data)
 
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = models.Budget.objects.all()
     serializer_class = serializers.BudgetSerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        AllowAny: ['create', 'list', 'retrieve'],
+        LoggedIn: ['create', 'list', 'retrieve'],
         isBudgetOwner: ['destroy','partial_update']
     }
 
     @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(0))
+    @method_decorator(cache_page(1))
     def list(self, request, *args, **kwargs):
-        x = super().list(request, *args, **kwargs)
-        return x
+        return super().list(request, *args, **kwargs)
+        
+    
+    def get_queryset(self):
+        qs =  super().get_queryset()
+        final_qs =  super().get_queryset()
+        user = self.request.user
+        for q in qs:
+            if user not in q.participants.all():
+                final_qs = final_qs.exclude(id=q.id)
+        return final_qs
+    
 
     def partial_update(self, request, *args, **kwargs):
         instance = self.queryset.get(pk=kwargs.get('pk'))
@@ -54,3 +58,17 @@ class BudgetViewSet(viewsets.ModelViewSet):
         instance.participants.add(new_part)
         data = self.get_serializer(instance).data
         return Response(data)
+
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    permission_classes=(ActionBasedPermission,)
+    action_permissions = {
+        AllowAny: ['list', 'retrieve'],
+    }
+
+    @method_decorator(cache_page(10))    
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

@@ -20,7 +20,6 @@ class isBudgetOwner(permissions.BasePermission):
     message = "Not allowed."
     
     def has_object_permission(self, request, view, obj):
-        print('has obj perm:', obj.owner == self.request.user)
         return obj.owner == self.request.user
 
     def has_permission(self, request, view):
@@ -31,8 +30,23 @@ class isEntryOwner(permissions.BasePermission):
     message = "Not allowed."
     
     def has_object_permission(self, request, view, obj):
-        print('has obj perm:', obj.owner == self.request.user)
-        return obj.Creator == self.request.user
+        return obj.creator == self.request.user
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
+
+class CanAccessEntry(permissions.BasePermission):
+    message = "Not allowed."
+
+    def has_permission(self, request, view):
+        if view.action in ['retrieve',]:
+            user = request.user
+            pk = view.kwargs['pk']
+            obj = models.Entry.objects.get(pk=pk)
+            return  user in obj.budget.participants.all()
+        elif view.action in ['create',]:
+            user = request.user
+            budget_id = request.data.get('budget', 0)
+            budget = models.Budget.objects.get(pk=budget_id)
+            return user in budget.participants.all()
+        return False

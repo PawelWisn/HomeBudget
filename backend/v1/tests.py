@@ -116,9 +116,11 @@ class BudgetTestCase(BaseTestCase):
         #delete
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth2)
         self.assertNotEqual(response.status_code, 204, msg=response.data)
+        self.assertEqual(models.Budget.objects.count(), 1)
 
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 204, msg=response.data)
+        self.assertEqual(models.Budget.objects.count(), 0)
         
     def test_budget_can_be_shared(self):
         user = self.create_user()
@@ -204,3 +206,50 @@ class EntryTestCase(BaseTestCase):
         response = client.get(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertEqual(response.data['total'], "100.02", msg=response.data)
+
+    def test_delete_is_only_for_creator(self):
+        user = self.create_user()
+        token = self.get_user_token()
+        auth = f"JWT {token}"
+
+        user_dict2 = {'username':'second_user', 'password':f"{random_password}"}
+        user2 = self.create_user(user_dict2)
+        token2 = self.get_user_token(user_dict2)
+        auth2 = f"JWT {token2}"
+
+        #create category
+        category = models.Category.objects.create(name='Food')
+
+        payload = {"title": "Budget1", "owner": user.id}
+        
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+        self.assertContains(response, 'id', status_code=201)
+
+        budget_id = str(response.data['id'])
+        payload = {"creator": user.id, "amount":"50.01", "category":category.id,"budget":budget_id }
+
+        #creation
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+
+        entry_id = response.data['id']
+
+        #illigal removal for non participant user
+        response = client.delete(f'/entry/{budget_id}/', HTTP_AUTHORIZATION=auth2)
+        self.assertNotEqual(response.status_code, 204, msg=response.data)
+        self.assertEqual(models.Entry.objects.count(), 1)
+
+        #make second user a participant
+        payload = {"new_user": user2.username}
+        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth, content_type='application/json')
+
+        #confirm participant can't remove entry
+        response = client.delete(f'/entry/{entry_id}/', HTTP_AUTHORIZATION=auth2)
+        self.assertNotEqual(response.status_code, 204, msg=response.data)
+        self.assertEqual(models.Entry.objects.count(), 1)
+
+        #legal removal for creator
+        response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 204, msg=response.data)
+        self.assertEqual(models.Entry.objects.count(), 0)

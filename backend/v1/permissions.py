@@ -27,12 +27,17 @@ class isBudgetOwner(permissions.BasePermission):
 
 class isEntryOwner(permissions.BasePermission):
     message = "Not allowed."
-    
-    def has_object_permission(self, request, view, obj):
-        return obj.creator == self.request.user
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated
+        if view.action in ['destroy',]:
+            user = request.user
+            pk = view.kwargs['pk']
+            try:
+                obj = models.Entry.objects.get(pk=pk)
+            except models.Entry.DoesNotExist:
+                return False
+            return  user == obj.creator
+        return False
 
 class CanAccessEntry(permissions.BasePermission):
     message = "Not allowed."
@@ -43,7 +48,7 @@ class CanAccessEntry(permissions.BasePermission):
             pk = view.kwargs['pk']
             try:
                 obj = models.Entry.objects.get(pk=pk)
-            except models.Budget.DoesNotExist:
+            except models.Entry.DoesNotExist:
                 return False
             return  user in obj.budget.participants.all()
         elif view.action in ['create',]:

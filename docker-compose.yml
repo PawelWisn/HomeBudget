@@ -21,7 +21,16 @@ services:
    POSTGRES_DB: homebudget
    POSTGRES_USER: hbadmin
    POSTGRES_PASSWORD: GCxJV8Z3{n!fRq)3
+ frontend:
+  build: ./frontend
+  command: npm start
+  ports:
+   - "81:3000"
+  volumes:
+   - ./frontend:/code
+   - /code/node_modules/
 volumes:
   postgres-data:
   backend:
+  frontend:
 

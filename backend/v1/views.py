@@ -2,7 +2,7 @@ from . import serializers
 from . import models
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner, CanAccessEntry
+from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner, CanAccessEntry,CanAccessBudget
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -31,8 +31,9 @@ class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BudgetSerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        LoggedIn: ['create', 'list', 'retrieve'],
-        isBudgetOwner: ['destroy','partial_update']
+        LoggedIn: ['create', 'list'],
+        isBudgetOwner: ['destroy','partial_update'],
+        CanAccessBudget: ['retrieve',],
     }
 
     @method_decorator(vary_on_headers('Authorization'))
@@ -58,7 +59,20 @@ class BudgetViewSet(viewsets.ModelViewSet):
         instance.participants.add(new_part)
         data = self.get_serializer(instance).data
         return Response(data)
-
+    
+    @method_decorator(vary_on_headers('Authorization'))
+    @method_decorator(cache_page(1))
+    def retrieve(self, request, *args, **kwargs):
+        budget_data = super().retrieve(request,*args, **kwargs).data
+        budget_id = budget_data.get('id', 0)
+        entries = models.Entry.objects.filter(budget__id=budget_id)
+        entry_serializer = serializers.EntrySerializer
+        entry_arr = []
+        for entry in entries:
+            entry_data = entry_serializer(entry).data
+            entry_arr.append(entry_data)
+        budget_data['entries'] = entry_arr
+        return Response(budget_data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

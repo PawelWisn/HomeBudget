@@ -23,8 +23,6 @@ function CreateBudgetComponent() {
                     }
                 })
                 .then(function (response){
-                    let data:any= response.data;
-                    storeToken(data.access);
                     history.push('/home');
                 })
                 .catch(function (error){

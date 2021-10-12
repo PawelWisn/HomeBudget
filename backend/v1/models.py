@@ -7,7 +7,7 @@ class Budget(models.Model):
     title = models.CharField(max_length=128, default='Budget')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    participants = models.ManyToManyField(User, related_name='participants')
+    participants = models.ManyToManyField(User, related_name='participants', blank=True)
 
     def __str__(self) -> str:
         return self.title + ': ' + str(self.owner)

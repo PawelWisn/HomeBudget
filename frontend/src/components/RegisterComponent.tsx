@@ -7,10 +7,6 @@ function RegisterComponent() {
 
     const history = useHistory();
 
-    function tileOnclick(url: string) {
-        history.push(url);
-    }
-
     return (
         <div>
             <p>Register new account:</p>

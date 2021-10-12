@@ -12,11 +12,6 @@ class Budget(models.Model):
     def __str__(self) -> str:
         return self.title + ': ' + str(self.owner)
 
-    def isUserParticipating(self, pk):
-        print(self.participants)
-        return pk in self.participants
-    
-
 
 class Category(models.Model):
     class Meta:
@@ -26,7 +21,6 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
 
 
 class Entry(models.Model):

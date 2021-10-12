@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.getenv("DEBUG")))
 
-ALLOWED_HOSTS = ['localhost','0.0.0.0', '127.0.0.1',]
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', ]
 
 # Application definition
 CORS_ORIGIN_ALLOW_ALL = True
@@ -135,10 +135,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
-    'USER_CREATE_PASSWORD_RETYPE':False,
-    'HIDE_USERS':True,
+    'USER_CREATE_PASSWORD_RETYPE': False,
+    'HIDE_USERS': True,
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -165,6 +164,6 @@ CACHE_MIDDLEWARE_SECONDS = 0
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake', 
+        'LOCATION': 'unique-snowflake',
     }
 }

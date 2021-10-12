@@ -9,15 +9,17 @@ class ActionBasedPermission(permissions.AllowAny):
                 return klass().has_permission(request, view)
         return False
 
+
 class LoggedIn(permissions.BasePermission):
     message = "Not allowed."
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
+
 class isBudgetOwner(permissions.BasePermission):
     message = "Not allowed."
-    
+
     def has_object_permission(self, request, view, obj):
         return obj.owner == self.request.user
 
@@ -29,29 +31,30 @@ class isEntryOwner(permissions.BasePermission):
     message = "Not allowed."
 
     def has_permission(self, request, view):
-        if view.action in ['destroy',]:
+        if view.action in ['destroy', ]:
             user = request.user
             pk = view.kwargs['pk']
             try:
                 obj = models.Entry.objects.get(pk=pk)
             except models.Entry.DoesNotExist:
                 return False
-            return  user == obj.creator
+            return user == obj.creator
         return False
+
 
 class CanAccessEntry(permissions.BasePermission):
     message = "Not allowed."
 
     def has_permission(self, request, view):
-        if view.action in ['retrieve',]:
+        if view.action in ['retrieve', ]:
             user = request.user
             pk = view.kwargs['pk']
             try:
                 obj = models.Entry.objects.get(pk=pk)
             except models.Entry.DoesNotExist:
                 return False
-            return  user in obj.budget.participants.all()
-        elif view.action in ['create',]:
+            return user in obj.budget.participants.all()
+        elif view.action in ['create', ]:
             user = request.user
             budget_id = request.data.get('budget', 0)
             try:
@@ -61,16 +64,17 @@ class CanAccessEntry(permissions.BasePermission):
             return user in budget.participants.all()
         return False
 
+
 class CanAccessBudget(permissions.BasePermission):
     message = "Not allowed."
 
     def has_permission(self, request, view):
-        if view.action in ['retrieve',]:
+        if view.action in ['retrieve', ]:
             user = request.user
             pk = view.kwargs['pk']
             try:
                 obj = models.Budget.objects.get(pk=pk)
             except models.Budget.DoesNotExist:
                 return False
-            return  user in obj.participants.all()
+            return user in obj.participants.all()
         return False

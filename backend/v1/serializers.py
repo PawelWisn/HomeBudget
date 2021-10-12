@@ -7,25 +7,26 @@ from django.utils import timezone
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username','password')
+        fields = ('id', 'username', 'password')
 
 
 class EntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Entry
-        fields=('id', 'creator', 'amount', 'category', 'budget')
+        fields = ('id', 'creator', 'amount', 'category', 'budget')
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
-        fields=('id', 'name')
+        fields = ('id', 'name')
 
 
 class BudgetSerializer(serializers.ModelSerializer):
     class Meta:
-        model=models.Budget
-        fields = ('id', 'title', 'owner','total','participants')        
-        extra_kwargs = {'participants':{'required':False}}
+        model = models.Budget
+        fields = ('id', 'title', 'owner', 'total', 'participants')
+        extra_kwargs = {'participants': {'required': False}}
 
     def create(self, validated_data):
         instance = super().create(validated_data)

@@ -28,6 +28,7 @@ class BaseTestCase(TestCase):
         token = response.data['access']
         return token
 
+
 class UserTestCase(BaseTestCase):
     def test_registration_successful(self):
         user_dict = self.new_user.copy()
@@ -62,6 +63,7 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertContains(response, 'access', status_code=200)
 
+
 class BudgetTestCase(BaseTestCase):
     def test_budget_creation_login_required(self):
         user = self.create_user()
@@ -69,11 +71,11 @@ class BudgetTestCase(BaseTestCase):
         auth = f"JWT {token}"
 
         payload = {"title": "Budget1", "owner": user.id}
-        
+
         response = client.post('/budget/', payload)
         self.assertEqual(response.status_code, 401, msg=response.data)
-        
-        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
         self.assertContains(response, 'id', status_code=201)
 
@@ -82,20 +84,20 @@ class BudgetTestCase(BaseTestCase):
         token = self.get_user_token()
         auth = f"JWT {token}"
 
-        user_dict2 = {'username':'second_user', 'password':f"{random_password}"}
+        user_dict2 = {'username': 'second_user', 'password': f"{random_password}"}
         user2 = self.create_user(user_dict2)
         token2 = self.get_user_token(user_dict2)
         auth2 = f"JWT {token2}"
 
         payload = {"title": "Budget1", "owner": user.id}
 
-        #create
+        # create
         response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
 
         budget_id = str(response.data['id'])
 
-        #list
+        # list
         response = client.get('/budget/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertEqual(len(response.data['results']), 1)
@@ -104,7 +106,7 @@ class BudgetTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertEqual(len(response.data['results']), 0)
 
-        #retrieve
+        # retrieve
         response = client.get(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertContains(response, 'id', status_code=200)
@@ -113,7 +115,7 @@ class BudgetTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 403, msg=response.data)
         self.assertNotContains(response, 'id', status_code=403)
 
-        #delete
+        # delete
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth2)
         self.assertNotEqual(response.status_code, 204, msg=response.data)
         self.assertEqual(models.Budget.objects.count(), 1)
@@ -121,34 +123,36 @@ class BudgetTestCase(BaseTestCase):
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 204, msg=response.data)
         self.assertEqual(models.Budget.objects.count(), 0)
-        
+
     def test_budget_can_be_shared(self):
         user = self.create_user()
         token = self.get_user_token()
         auth = f"JWT {token}"
 
-        user_dict2 = {'username':'second_user', 'password':f"{random_password}"}
+        user_dict2 = {'username': 'second_user', 'password': f"{random_password}"}
         user2 = self.create_user(user_dict2)
         token2 = self.get_user_token(user_dict2)
         auth2 = f"JWT {token2}"
 
         payload = {"title": "Budget1", "owner": user.id}
-        
-        #create
-        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+
+        # create
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
 
         budget_id = str(response.data['id'])
         payload = {"new_user": user2.username}
 
-        #share
-        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth, content_type='application/json')
+        # share
+        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth,
+                                content_type='application/json')
         self.assertEqual(response.status_code, 200, msg=response.data)
 
-        #confirm access
+        # confirm access
         response = client.get('/budget/', HTTP_AUTHORIZATION=auth2)
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertEqual(len(response.data['results']), 1)
+
 
 class EntryTestCase(BaseTestCase):
     def test_entry_creation_login_required(self):
@@ -156,25 +160,25 @@ class EntryTestCase(BaseTestCase):
         token = self.get_user_token()
         auth = f"JWT {token}"
 
-        #create category
+        # create category
         category = models.Category.objects.create(name='Food')
 
         payload = {"title": "Budget1", "owner": user.id}
-        
-        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
         self.assertContains(response, 'id', status_code=201)
 
         budget_id = str(response.data['id'])
-        payload = {"creator": user.id, "amount":"50.01", "category":category.id,"budget":budget_id }
+        payload = {"creator": user.id, "amount": "50.01", "category": category.id, "budget": budget_id}
 
-        #with auth
-        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        # with auth
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
         self.assertContains(response, 'id', status_code=201)
 
-        #no auth
-        response = client.post('/entry/', payload, follow=True)
+        # no auth
+        response = client.post('/entry/', payload)
         self.assertEqual(response.status_code, 401, msg=response.data)
 
     def test_entry_amount_adds_properly(self):
@@ -182,27 +186,27 @@ class EntryTestCase(BaseTestCase):
         token = self.get_user_token()
         auth = f"JWT {token}"
 
-        #create category
+        # create category
         category = models.Category.objects.create(name='Food')
 
         payload = {"title": "Budget1", "owner": user.id}
-        
-        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
         self.assertContains(response, 'id', status_code=201)
 
         budget_id = str(response.data['id'])
-        payload = {"creator": user.id, "amount":"50.01", "category":category.id,"budget":budget_id }
+        payload = {"creator": user.id, "amount": "50.01", "category": category.id, "budget": budget_id}
 
-        #first post
-        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        # first post
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
 
-        #second post
-        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        # second post
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
 
-        #total evaluation
+        # total evaluation
         response = client.get(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertEqual(response.data['total'], "100.02", msg=response.data)
@@ -212,44 +216,45 @@ class EntryTestCase(BaseTestCase):
         token = self.get_user_token()
         auth = f"JWT {token}"
 
-        user_dict2 = {'username':'second_user', 'password':f"{random_password}"}
+        user_dict2 = {'username': 'second_user', 'password': f"{random_password}"}
         user2 = self.create_user(user_dict2)
         token2 = self.get_user_token(user_dict2)
         auth2 = f"JWT {token2}"
 
-        #create category
+        # create category
         category = models.Category.objects.create(name='Food')
 
         payload = {"title": "Budget1", "owner": user.id}
-        
-        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
         self.assertContains(response, 'id', status_code=201)
 
         budget_id = str(response.data['id'])
-        payload = {"creator": user.id, "amount":"50.01", "category":category.id,"budget":budget_id }
+        payload = {"creator": user.id, "amount": "50.01", "category": category.id, "budget": budget_id}
 
-        #creation
-        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        # creation
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 201, msg=response.data)
 
         entry_id = response.data['id']
 
-        #illigal removal for non participant user
+        # illigal removal for non participant user
         response = client.delete(f'/entry/{budget_id}/', HTTP_AUTHORIZATION=auth2)
         self.assertNotEqual(response.status_code, 204, msg=response.data)
         self.assertEqual(models.Entry.objects.count(), 1)
 
-        #make second user a participant
+        # make second user a participant
         payload = {"new_user": user2.username}
-        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth, content_type='application/json')
+        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth,
+                                content_type='application/json')
 
-        #confirm participant can't remove entry
+        # confirm participant can't remove entry
         response = client.delete(f'/entry/{entry_id}/', HTTP_AUTHORIZATION=auth2)
         self.assertNotEqual(response.status_code, 204, msg=response.data)
         self.assertEqual(models.Entry.objects.count(), 1)
 
-        #legal removal for creator
+        # legal removal for creator
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 204, msg=response.data)
         self.assertEqual(models.Entry.objects.count(), 0)

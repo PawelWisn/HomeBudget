@@ -4,7 +4,6 @@ from . import models
 
 class ActionBasedPermission(permissions.AllowAny):
     def has_permission(self, request, view):
-        print(view.action)
         for klass, actions in getattr(view, 'action_permissions', {}).items():
             if view.action in actions:
                 return klass().has_permission(request, view)
@@ -49,4 +48,15 @@ class CanAccessEntry(permissions.BasePermission):
             budget_id = request.data.get('budget', 0)
             budget = models.Budget.objects.get(pk=budget_id)
             return user in budget.participants.all()
+        return False
+
+class CanAccessBudget(permissions.BasePermission):
+    message = "Not allowed."
+
+    def has_permission(self, request, view):
+        if view.action in ['retrieve',]:
+            user = request.user
+            pk = view.kwargs['pk']
+            obj = models.Budget.objects.get(pk=pk)
+            return  user in obj.participants.all()
         return False

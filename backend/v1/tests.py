@@ -258,3 +258,41 @@ class EntryTestCase(BaseTestCase):
         response = client.delete(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
         self.assertEqual(response.status_code, 204, msg=response.data)
         self.assertEqual(models.Entry.objects.count(), 0)
+
+
+class PaginationTestCase(BaseTestCase):
+
+    def test_pagination(self):
+        user = self.create_user()
+        token = self.get_user_token()
+        auth = f"JWT {token}"
+
+        # create 3 budgets
+        payload = {"title": "Budget1", "owner": user.id}
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
+
+        payload = {"title": "Budget2", "owner": user.id}
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
+
+        payload = {"title": "Budget3", "owner": user.id}
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth)
+
+        # without pagination
+        response = client.get('/budget/', HTTP_AUTHORIZATION=auth)
+        self.assertEqual(len(response.data['results']), 3)
+
+        # limit to 1 result
+        response = client.get('/budget/?limit=1', HTTP_AUTHORIZATION=auth)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['title'], 'Budget1')
+
+        # limit to 1 result and shift by one
+        response = client.get('/budget/?limit=1&offset=1', HTTP_AUTHORIZATION=auth)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['title'], 'Budget2')
+
+        # shift by one
+        response = client.get('/budget/?offset=1', HTTP_AUTHORIZATION=auth)
+        self.assertEqual(len(response.data['results']), 2)
+        self.assertEqual(response.data['results'][0]['title'], 'Budget2')
+        self.assertEqual(response.data['results'][1]['title'], 'Budget3')

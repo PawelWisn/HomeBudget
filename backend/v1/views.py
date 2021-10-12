@@ -1,6 +1,6 @@
 from . import serializers
 from . import models
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner, CanAccessEntry,CanAccessBudget
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -54,9 +54,15 @@ class BudgetViewSet(viewsets.ModelViewSet):
     
 
     def partial_update(self, request, *args, **kwargs):
-        instance = self.queryset.get(pk=kwargs.get('pk'))
+        try:
+            instance = self.queryset.get(pk=kwargs.get('pk'))
+        except models.Budget.DoesNotExist:
+            return Response({"errors": "Instance not found"},status=status.HTTP_404_NOT_FOUND)
         new_username = request.data['new_user']
-        new_part = User.objects.get(username=new_username)
+        try:
+            new_part = User.objects.get(username=new_username)
+        except User.DoesNotExist:
+            return Response({"errors": "Username not found"},status=status.HTTP_404_NOT_FOUND)
         instance.participants.add(new_part)
         data = self.get_serializer(instance).data
         return Response(data)

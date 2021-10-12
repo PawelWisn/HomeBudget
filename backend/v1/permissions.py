@@ -41,12 +41,18 @@ class CanAccessEntry(permissions.BasePermission):
         if view.action in ['retrieve',]:
             user = request.user
             pk = view.kwargs['pk']
-            obj = models.Entry.objects.get(pk=pk)
+            try:
+                obj = models.Entry.objects.get(pk=pk)
+            except models.Budget.DoesNotExist:
+                return False
             return  user in obj.budget.participants.all()
         elif view.action in ['create',]:
             user = request.user
             budget_id = request.data.get('budget', 0)
-            budget = models.Budget.objects.get(pk=budget_id)
+            try:
+                budget = models.Budget.objects.get(pk=budget_id)
+            except models.Budget.DoesNotExist:
+                return False
             return user in budget.participants.all()
         return False
 
@@ -57,6 +63,9 @@ class CanAccessBudget(permissions.BasePermission):
         if view.action in ['retrieve',]:
             user = request.user
             pk = view.kwargs['pk']
-            obj = models.Budget.objects.get(pk=pk)
+            try:
+                obj = models.Budget.objects.get(pk=pk)
+            except models.Budget.DoesNotExist:
+                return False
             return  user in obj.participants.all()
         return False

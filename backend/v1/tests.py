@@ -147,3 +147,60 @@ class BudgetTestCase(BaseTestCase):
         response = client.get('/budget/', HTTP_AUTHORIZATION=auth2)
         self.assertEqual(response.status_code, 200, msg=response.data)
         self.assertEqual(len(response.data['results']), 1)
+
+class EntryTestCase(BaseTestCase):
+    def test_entry_creation_login_required(self):
+        user = self.create_user()
+        token = self.get_user_token()
+        auth = f"JWT {token}"
+
+        #create category
+        category = models.Category.objects.create(name='Food')
+
+        payload = {"title": "Budget1", "owner": user.id}
+        
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+        self.assertContains(response, 'id', status_code=201)
+
+        budget_id = str(response.data['id'])
+        payload = {"creator": user.id, "amount":"50.01", "category":category.id,"budget":budget_id }
+
+        #with auth
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+        self.assertContains(response, 'id', status_code=201)
+
+        #no auth
+        response = client.post('/entry/', payload, follow=True)
+        self.assertEqual(response.status_code, 401, msg=response.data)
+
+    def test_entry_amount_adds_properly(self):
+        user = self.create_user()
+        token = self.get_user_token()
+        auth = f"JWT {token}"
+
+        #create category
+        category = models.Category.objects.create(name='Food')
+
+        payload = {"title": "Budget1", "owner": user.id}
+        
+        response = client.post('/budget/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+        self.assertContains(response, 'id', status_code=201)
+
+        budget_id = str(response.data['id'])
+        payload = {"creator": user.id, "amount":"50.01", "category":category.id,"budget":budget_id }
+
+        #first post
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+
+        #second post
+        response = client.post('/entry/', payload, HTTP_AUTHORIZATION=auth, follow=True)
+        self.assertEqual(response.status_code, 201, msg=response.data)
+
+        #total evaluation
+        response = client.get(f'/budget/{budget_id}/', HTTP_AUTHORIZATION=auth)
+        self.assertEqual(response.status_code, 200, msg=response.data)
+        self.assertEqual(response.data['total'], "100.02", msg=response.data)

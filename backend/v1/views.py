@@ -36,8 +36,9 @@ class BudgetViewSet(viewsets.ModelViewSet):
         CanAccessBudget: ['retrieve',],
     }
 
+
     @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(1))
+    @method_decorator(cache_page(0))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
         
@@ -61,7 +62,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
         return Response(data)
     
     @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(1))
+    @method_decorator(cache_page(0))
     def retrieve(self, request, *args, **kwargs):
         budget_data = super().retrieve(request,*args, **kwargs).data
         budget_id = budget_data.get('id', 0)

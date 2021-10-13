@@ -1,7 +1,7 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import {storeToken, getToken, storeUserID} from "./utils";
+import {storeToken} from "./utils";
 
 function LoginComponent() {
 
@@ -25,21 +25,7 @@ function LoginComponent() {
                     let data:any= response.data;
                     storeToken(data.access);
                     history.push('/home');
-                })
-                .then(()=>{
-                    axios.get('http://localhost:8001/auth/users/me/',{
-                        headers:{
-                            "Authorization": "JWT " + getToken()
-                        }
-                    }).then(function (response){
-                        let data:any= response.data;
-                    storeUserID(data.id);
-                    })
-                })
-                .catch(function (error){
-                    alert(JSON.stringify(error.response.data, null, 2));
-                })
-              }}/>
+                })}}/>
             </form>
         </div>
     );

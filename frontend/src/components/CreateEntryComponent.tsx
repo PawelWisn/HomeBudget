@@ -1,7 +1,6 @@
-import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import {getUserID, getToken} from "./utils";
+import {getToken} from "./utils";
 
 function buildCategoryOptions(categories:any){
     let cat_options: any = [];
@@ -20,10 +19,9 @@ function buildCategoryOptions(categories:any){
 
 
 function CreateEntryComponent(props:any) {
-    const {budget_id, categories} = props
+    const {budget_id, categories, user_id} = props
 
     console.log(budget_id);
-    const history = useHistory();
 
     return (
         <div className={"createentry"}>
@@ -40,7 +38,7 @@ function CreateEntryComponent(props:any) {
                 axios.post('http://localhost:8001/entry/',{
                     "amount": $(`#post_amount${budget_id}`).val(),
                     "category": $('#post_category').val(),
-                    "creator": getUserID(),
+                    "creator": user_id,
                     "budget": budget_id
                 },{
                     headers:{

@@ -1,4 +1,3 @@
-import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
 import {useState, useEffect } from 'react';
@@ -29,8 +28,7 @@ function buildEntries(entries:any){
 }
 
 function BudgetDetailComponent(props:any) {
-    const {budget_id, budget_title,budget_owner, budget_total} = props;
-    const history = useHistory();
+    const {budget_id, budget_title, budget_total, user_id} = props;
     const [entries, setEntries] = useState();
     const [categories, setCategories] = useState();
 
@@ -97,7 +95,7 @@ function BudgetDetailComponent(props:any) {
               </div>
               <br/>
 
-              <CreateEntryComponent budget_id={budget_id} categories={categories}/>
+              <CreateEntryComponent budget_id={budget_id} categories={categories} user_id={user_id}/>
               <div className={"entries"}>
             {buildEntries(entries)}
             </div>

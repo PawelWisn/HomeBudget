@@ -1,11 +1,9 @@
-import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import {getUserID, getToken} from "./utils";
+import {getToken} from "./utils";
 
-function CreateBudgetComponent() {
-
-    const history = useHistory();
+function CreateBudgetComponent(props:any) {
+    const {user_id} = props;
 
     return (
         <div className={"budgetcreate"}>
@@ -15,7 +13,7 @@ function CreateBudgetComponent() {
                 e.preventDefault();
                 axios.post('http://localhost:8001/budget/',{
                     "title": $('#create_budget').val(),
-                    "owner": getUserID(),
+                    "owner": user_id,
                 },{
                     headers:{
                         "Authorization": "JWT " + getToken()

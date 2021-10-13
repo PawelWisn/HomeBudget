@@ -1,5 +1,5 @@
 import {useHistory} from "react-router-dom";
-import {deleteToken, deleteUserID} from "./utils";
+import {deleteToken} from "./utils";
 
 function CreateBudgetComponent() {
 
@@ -11,7 +11,6 @@ function CreateBudgetComponent() {
               <input type="submit" value="Logout" onClick={(e)=>{
                 e.preventDefault();
                 deleteToken();
-                deleteUserID();
                 history.push('/auth');
               }}/>
             </form>

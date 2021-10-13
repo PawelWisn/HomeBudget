@@ -1,10 +1,7 @@
-import {useHistory} from "react-router-dom";
 import LoginComponent from "../components/LoginComponent";
 import RegisterComponent from "../components/RegisterComponent";
 
-function Homepage() {
-
-    const history = useHistory();
+function Authorization() {
 
     return (
         <div>
@@ -17,4 +14,4 @@ function Homepage() {
 }
 
 
-export default Homepage
+export default Authorization

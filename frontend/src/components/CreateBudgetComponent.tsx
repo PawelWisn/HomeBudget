@@ -8,7 +8,7 @@ function CreateBudgetComponent(props:any) {
     return (
         <div className={"budgetcreate"}>
             <form>
-              <input type="text" id="create_budget" name="title" placeholder="New budget name"/><br/>
+              <input type="text" id="create_budget" name="title" placeholder="New budget title"/><br/>
               <input type="submit" value="Create budget" onClick={(e)=>{
                 e.preventDefault();
                 axios.post('http://localhost:8001/budget/',{

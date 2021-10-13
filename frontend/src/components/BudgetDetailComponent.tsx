@@ -1,8 +1,8 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import React, { useState, useEffect } from 'react';
-import {storeToken, getUserID, getToken} from "./utils";
+import {useState, useEffect } from 'react';
+import {getToken} from "./utils";
 import EntryDetailComponent from './EntryDetailComponent';
 import CreateEntryComponent from './CreateEntryComponent';
 

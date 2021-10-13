@@ -1,7 +1,7 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import {getUserID, storeToken, getToken} from "./utils";
+import {getUserID, getToken} from "./utils";
 
 function buildCategoryOptions(categories:any){
     let cat_options: any = [];

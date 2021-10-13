@@ -1,7 +1,7 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import {storeToken, getUserID, getToken} from "./utils";
+import {getUserID, getToken} from "./utils";
 
 function CreateBudgetComponent() {
 

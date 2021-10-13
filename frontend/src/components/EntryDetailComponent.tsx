@@ -1,8 +1,6 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
-import $ from 'jquery';
-import React, { useState, useEffect } from 'react';
-import {storeToken, getUserID, getToken} from "./utils";
+import {getToken} from "./utils";
 
 function EntryDetailComponent(props:any) {
     const {entry_id, entry_creator, entry_amount, entry_category} = props;

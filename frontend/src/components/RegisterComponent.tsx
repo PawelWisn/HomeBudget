@@ -1,7 +1,6 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
-import {storeToken} from "./utils";
 
 function RegisterComponent() {
 

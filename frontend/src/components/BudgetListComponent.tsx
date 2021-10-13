@@ -1,8 +1,7 @@
 import {useHistory} from "react-router-dom";
 import axios from 'axios';
-import $ from 'jquery';
-import React, { useState, useEffect } from 'react';
-import {storeToken, getUserID, getToken} from "./utils";
+import { useState, useEffect } from 'react';
+import {getToken} from "./utils";
 import BudgetDetailComponent from "./BudgetDetailComponent";
 
 function buildBudgets(data:any){

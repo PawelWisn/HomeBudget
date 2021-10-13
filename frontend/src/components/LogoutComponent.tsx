@@ -1,6 +1,4 @@
 import {useHistory} from "react-router-dom";
-import axios from 'axios';
-import $ from 'jquery';
 import {deleteToken, deleteUserID} from "./utils";
 
 function CreateBudgetComponent() {

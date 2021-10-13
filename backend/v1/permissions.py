@@ -24,7 +24,15 @@ class isBudgetOwner(permissions.BasePermission):
         return obj.owner == self.request.user
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated
+        if view.action in ['destroy', 'partial_update']:
+            user = request.user
+            pk = view.kwargs['pk']
+            try:
+                obj = models.Budget.objects.get(pk=pk)
+            except models.Budget.DoesNotExist:
+                return False
+            return user == obj.owner
+        return False
 
 
 class isEntryOwner(permissions.BasePermission):

@@ -17,13 +17,8 @@ class EntryViewSet(viewsets.ModelViewSet):
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
         CanAccessEntry: ['create', 'retrieve'],
-        isEntryOwner: ['destroy',]
+        isEntryOwner: ['destroy',],
     }
-
-    @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(0))    
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
 
 class BudgetViewSet(viewsets.ModelViewSet):

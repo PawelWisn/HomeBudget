@@ -15,6 +15,13 @@ class EntrySerializer(serializers.ModelSerializer):
         model = models.Entry
         fields = ('id', 'creator', 'amount', 'category', 'budget')
 
+class EntryDetailSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name')
+    creator_name = serializers.CharField(source='creator.username')
+    class Meta:
+        model = models.Entry
+        fields = ('id', 'creator_name', 'amount', 'category_name', 'budget')
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

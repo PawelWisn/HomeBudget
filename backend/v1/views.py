@@ -73,7 +73,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
         budget_data = super().retrieve(request,*args, **kwargs).data
         budget_id = budget_data.get('id', 0)
         entries = models.Entry.objects.filter(budget__id=budget_id)
-        entry_serializer = serializers.EntrySerializer
+        entry_serializer = serializers.EntryDetailSerializer
         entry_arr = []
         for entry in entries:
             entry_data = entry_serializer(entry).data

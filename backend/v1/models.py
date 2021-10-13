@@ -4,6 +4,9 @@ from django.db.models import F
 
 
 class Budget(models.Model):
+    class Meta:
+        ordering = "title", 'id'
+
     title = models.CharField(max_length=128, default='Budget')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=6, decimal_places=2, default=0)

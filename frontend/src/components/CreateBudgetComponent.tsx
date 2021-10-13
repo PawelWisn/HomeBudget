@@ -10,9 +10,8 @@ function CreateBudgetComponent() {
     return (
         <div>
             <form>
-              <label>New budget name:</label><br/>
-              <input type="text" id="create_budget" name="title"/><br/>
-              <input type="submit" value="Create" onClick={(e)=>{
+              <input type="text" id="create_budget" name="title" placeholder="New budget name"/><br/>
+              <input type="submit" value="Create budget" onClick={(e)=>{
                 e.preventDefault();
                 axios.post('http://localhost:8001/budget/',{
                     "title": $('#create_budget').val(),
@@ -23,7 +22,7 @@ function CreateBudgetComponent() {
                     }
                 })
                 .then(function (response){
-                    history.push('/home');
+                    window.location.reload();
                 })
                 .catch(function (error){
                     alert(error);

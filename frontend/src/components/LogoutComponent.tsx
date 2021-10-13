@@ -17,6 +17,7 @@ function CreateBudgetComponent() {
                 history.push('/auth');
               }}/>
             </form>
+            <br/>
         </div>
     );
 

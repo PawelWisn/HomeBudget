@@ -8,8 +8,24 @@ function EntryDetailComponent(props:any) {
     const {entry_id, entry_creator, entry_amount, entry_category} = props;
     const history = useHistory();
 
-    return (
-            <h6>ENTRY;{entry_id}#{entry_creator}:amount={entry_amount},category={entry_category}</h6>
+    return (<div>
+                <p>{entry_creator}: {entry_category} {entry_amount}</p>
+                <input type="submit" value="Delete entry" onClick={(e)=>{
+                e.preventDefault();
+                axios.delete(`http://localhost:8001/entry/${entry_id}/`,{
+                    headers:{
+                        "Authorization": "JWT " + getToken()
+                    }
+                })
+                .then(function (response){
+                    window.location.reload();
+                })
+                .catch(function (error){
+                    alert(error);
+                })
+              }}/>
+                <br/>
+            </div>
     );
 
 }

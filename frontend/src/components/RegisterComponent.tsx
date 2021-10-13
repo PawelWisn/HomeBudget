@@ -25,7 +25,7 @@ function RegisterComponent() {
                     history.push('/auth');
                 })
                 .catch(function (error){
-                    alert(error);
+                    alert(JSON.stringify(error.response.data, null, 2));
                 })
               }}/>
             </form>

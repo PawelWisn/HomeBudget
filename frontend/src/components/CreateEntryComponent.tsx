@@ -51,7 +51,7 @@ function CreateEntryComponent(props:any) {
                     window.location.reload();
                 })
                 .catch(function (error){
-                    alert(error);
+                    alert(JSON.stringify(error.response.data, null, 2));
                 })
               }}/>
             </form>

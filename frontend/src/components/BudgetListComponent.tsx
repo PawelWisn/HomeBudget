@@ -12,9 +12,6 @@ function buildBudgets(data:any){
         data.map((obj:any)=>{
             budgets.push(<BudgetDetailComponent key={obj.id+obj.title} budget_title={obj.title} budget_id={obj.id} budget_owner={obj.owner} budget_total={obj.total} />)
         })}}
-    else{
-        budgets.push(<div><p>No Budgets</p></div>)
-    }
     return budgets;
 }
 

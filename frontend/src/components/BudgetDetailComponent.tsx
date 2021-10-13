@@ -18,12 +18,12 @@ function buildEntries(entries:any){
                 entries_arr.push(<EntryDetailComponent key={obj.id+obj.budget} entry_amount={obj.amount} entry_id={obj.id} entry_creator={obj.creator_name} entry_category={obj.category_name} />)
             })}
             else{
-                entries_arr.push(<h6>No Entries</h6>)
+                entries_arr.push(<p>No Entries</p>)
             }
         }
     }
     else{
-        entries_arr.push(<h6>No Entries</h6>)
+        entries_arr.push(<p>No Entries</p>)
     }
     return entries_arr;
 }
@@ -57,7 +57,9 @@ function BudgetDetailComponent(props:any) {
 
     return (
         <div className={"budget"}>
-            <h4>Name: {budget_title}</h4>
+            <h2>{budget_title}</h2>
+
+            <h4>Balance: {budget_total}</h4>
 
             <input type="submit" value="Delete budget" onClick={(e)=>{
                 e.preventDefault();
@@ -70,18 +72,16 @@ function BudgetDetailComponent(props:any) {
                     window.location.reload();
                 })
                 .catch(function (error){
-                    alert(error);
+                    alert(JSON.stringify(error.response.data, null, 2));
                 })
             }}/>
-            
-            <p>Balance: {budget_total}</p>
 
-            <div>
+            <div className={"inviteuser"}>
                 <input type="text" id="invited" name="invited" placeholder="username"/><br/>
                 <input type="submit" value="Invite user" onClick={(e)=>{
                     e.preventDefault();
                     axios.patch(`http://localhost:8001/budget/${budget_id}/`,{
-                        "username": $('#invited').val(),
+                        "new_user": $('#invited').val(),
                     },{
                         headers:{
                             "Authorization": "JWT " + getToken()
@@ -91,7 +91,7 @@ function BudgetDetailComponent(props:any) {
                         window.location.reload();
                     })
                     .catch(function (error){
-                        alert(error);
+                        alert(JSON.stringify(error.response.data, null, 2));
                     })
                 }}/>
               </div>

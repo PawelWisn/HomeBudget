@@ -8,7 +8,7 @@ function CreateBudgetComponent() {
     const history = useHistory();
 
     return (
-        <div>
+        <div className={"budgetcreate"}>
             <form>
               <input type="text" id="create_budget" name="title" placeholder="New budget name"/><br/>
               <input type="submit" value="Create budget" onClick={(e)=>{
@@ -25,7 +25,7 @@ function CreateBudgetComponent() {
                     window.location.reload();
                 })
                 .catch(function (error){
-                    alert(error);
+                    alert(JSON.stringify(error.response.data, null, 2));
                 })
               }}/>
             </form>

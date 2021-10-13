@@ -37,7 +37,7 @@ function LoginComponent() {
                     })
                 })
                 .catch(function (error){
-                    alert(error);
+                    alert(JSON.stringify(error.response.data, null, 2));
                 })
               }}/>
             </form>

@@ -38,7 +38,7 @@
 }
 
 p{
-  margin-bottom: 0.25em;
+  margin-bottom: 5px;
 }
 
 
@@ -65,4 +65,22 @@ p{
   margin-left: 20%;
   margin-top: 15px;
   margin-bottom: 15px;
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+
+.inviteuser{
+  background-color:#bbbbbb;
+  margin-right: 20%;
+  margin-left: 20%;
+  margin-top: 15px;
+  padding: 10px;
+}
+
+.budgetcreate{
+  background-color:#bbbbbb;
+  margin-right: 25%;
+  margin-left: 25%;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

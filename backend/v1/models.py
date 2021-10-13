@@ -40,3 +40,8 @@ class Entry(models.Model):
         self.budget.save()
         instance = super().save(*args, **kwargs)
         return instance
+
+    def delete(self, *args, **kwargs):
+        self.budget.total = F('total') - self.amount
+        self.budget.save()
+        return super().delete(*args, **kwargs)

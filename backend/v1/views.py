@@ -53,7 +53,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
             instance = self.queryset.get(pk=kwargs.get('pk'))
         except models.Budget.DoesNotExist:
             return Response({"errors": "Instance not found"},status=status.HTTP_404_NOT_FOUND)
-        new_username = request.data['new_user']
+        new_username = request.data.get('new_user', None)
         try:
             new_part = User.objects.get(username=new_username)
         except User.DoesNotExist:

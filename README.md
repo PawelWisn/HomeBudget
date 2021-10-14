@@ -28,5 +28,5 @@ Instalation:
     
   REMARKS:
   
-    - Client is humbly styled due to no frontend specialization
+    - Client is humbly styled due to lack of time and no frontend specialization
     - Client does not hangle pagination, but it is available by adding query parameters limit and offset (for example /budget/?limit=2&offset=1)

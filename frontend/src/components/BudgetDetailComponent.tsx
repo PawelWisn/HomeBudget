@@ -45,9 +45,7 @@ function BudgetDetailComponent(props:any) {
         axios.get(`http://localhost:8001/category/`)
         .then(function (response){
             var data:any = response.data;
-            console.log("first",data);
             setCategories(data.results);
-            console.log("second",data.results);
         });
 
     }, []);
@@ -75,11 +73,11 @@ function BudgetDetailComponent(props:any) {
             }}/>
 
             <div className={"inviteuser"}>
-                <input type="text" id="invited" name="invited" placeholder="username"/><br/>
+                <input type="text" id={`invited${budget_id}`} name="invited" placeholder="username"/><br/>
                 <input type="submit" value="Invite user" onClick={(e)=>{
                     e.preventDefault();
                     axios.patch(`http://localhost:8001/budget/${budget_id}/`,{
-                        "new_user": $('#invited').val(),
+                        "new_user": $(`#invited${budget_id}`).val(),
                     },{
                         headers:{
                             "Authorization": "JWT " + getToken()

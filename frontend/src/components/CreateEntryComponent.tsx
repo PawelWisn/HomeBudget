@@ -21,15 +21,13 @@ function buildCategoryOptions(categories:any){
 function CreateEntryComponent(props:any) {
     const {budget_id, categories, user_id} = props
 
-    console.log(budget_id);
-
     return (
         <div className={"createentry"}>
             <form>
               <label>Amount:</label><br/>
               <input type="text" id={`post_amount${budget_id}`} name="amount" placeholder="50.00"/><br/>
               <label>Category:</label><br/>
-              <select id="post_category" name="category">
+              <select id={`post_category${budget_id}`} name="category">
               {buildCategoryOptions(categories)}
               </select>
               <br/>
@@ -37,7 +35,7 @@ function CreateEntryComponent(props:any) {
                 e.preventDefault();
                 axios.post('http://localhost:8001/entry/',{
                     "amount": $(`#post_amount${budget_id}`).val(),
-                    "category": $('#post_category').val(),
+                    "category": $(`#post_category${budget_id}`).val(),
                     "creator": user_id,
                     "budget": budget_id
                 },{

@@ -21,7 +21,7 @@ function RegisterComponent() {
                     "password": $('#reg_password').val(),
                 })
                 .then(function (response){
-                    history.push('/auth');
+                    window.location.reload();
                 })
                 .catch(function (error){
                     alert(JSON.stringify(error.response.data, null, 2));

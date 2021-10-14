@@ -1,10 +1,8 @@
-import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import {getToken} from "./utils";
 
 function EntryDetailComponent(props:any) {
     const {entry_id, entry_creator, entry_amount, entry_category} = props;
-    const history = useHistory();
 
     return (<div>
                 <p>{entry_creator}: {entry_category} {entry_amount}</p>

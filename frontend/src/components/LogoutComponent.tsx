@@ -11,7 +11,7 @@ function CreateBudgetComponent() {
               <input type="submit" value="Logout" onClick={(e)=>{
                 e.preventDefault();
                 deleteToken();
-                history.push('/auth');
+                history.push('/');
               }}/>
             </form>
             <br/>

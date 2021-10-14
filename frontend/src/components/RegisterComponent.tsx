@@ -1,10 +1,7 @@
-import {useHistory} from "react-router-dom";
 import axios from 'axios';
 import $ from 'jquery';
 
 function RegisterComponent() {
-
-    const history = useHistory();
 
     return (
         <div>

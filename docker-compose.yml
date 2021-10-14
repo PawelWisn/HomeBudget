@@ -23,7 +23,6 @@ services:
    POSTGRES_PASSWORD: GCxJV8Z3{n!fRq)3
  frontend:
   build: ./frontend
-  command: npm start
   ports:
    - "81:3000"
   volumes:

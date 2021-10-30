@@ -23,16 +23,19 @@ function BudgetListComponent(props:any) {
                 "Authorization": "JWT " + getToken()
             }
         }).then(function (response){
-            let data:any = response.data;
-            setData(data.results);
+            return response;
+        })
+        .then(function (response:any){
+            setData(response.data.results);
         });
      
         
       }, []);
-
+//TODO
     return (
         <div>
-            {buildBudgets(data, user_id)}            
+            {buildBudgets(data, user_id)}      
+                  
         </div>
     );
 

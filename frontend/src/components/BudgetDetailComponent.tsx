@@ -38,14 +38,18 @@ function BudgetDetailComponent(props:any) {
                 "Authorization": "JWT " + getToken()
             }
         }).then(function (response){
-            let data:any = response.data;
-            setEntries(data.entries);
+            return response;
+        })
+        .then(function (response:any){
+            setEntries(response.data.entries);
         });
 
         axios.get(`http://localhost:8001/category/`)
         .then(function (response){
-            var data:any = response.data;
-            setCategories(data.results);
+            return response;
+        })
+        .then(function (response:any){
+            setCategories(response.data.results);
         });
 
     }, []);

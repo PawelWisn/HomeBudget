@@ -15,9 +15,11 @@ function Homepage() {
                 "Authorization": "JWT " + getToken()
             }})
             .then(function (response){
-                let data:any= response.data;
-                setUserid(data.id);
-                setUsername(data.username);
+                return response;
+            })
+            .then(function (response:any){
+                setUserid(response.data.id);
+                setUsername(response.data.username);
             })
             .catch(function (error:any){
                 alert(JSON.stringify(error.response.data, null, 2));

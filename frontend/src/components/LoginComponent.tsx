@@ -22,8 +22,10 @@ function LoginComponent() {
                     "password": $('#log_password').val(),
                 })
                 .then(function (response){
-                    let data:any= response.data;
-                    storeToken(data.access);
+                    return response;
+                })
+                .then(function (response:any){
+                    storeToken(response.data.access);
                     history.push('/home');
                 })}}/>
             </form>

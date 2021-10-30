@@ -144,7 +144,7 @@ class BudgetTestCase(BaseTestCase):
         payload = {"new_user": user2.username}
 
         # share
-        response = client.patch(f'/budget/{budget_id}/', payload, HTTP_AUTHORIZATION=auth,
+        response = client.patch(f'/invitation/{budget_id}/', payload, HTTP_AUTHORIZATION=auth,
                                 content_type='application/json')
         self.assertEqual(response.status_code, 200, msg=response.data)
 

@@ -80,7 +80,7 @@ function BudgetDetailComponent(props:any) {
                 <input type="text" id={`invited${budget_id}`} name="invited" placeholder="username"/><br/>
                 <input type="submit" value="Invite user" onClick={(e)=>{
                     e.preventDefault();
-                    axios.patch(`http://localhost:8001/budget/${budget_id}/`,{
+                    axios.patch(`http://localhost:8001/invitation/${budget_id}/`,{
                         "new_user": $(`#invited${budget_id}`).val(),
                     },{
                         headers:{

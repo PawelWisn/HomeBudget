@@ -17,7 +17,7 @@ class EntryViewSet(viewsets.ModelViewSet):
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
         CanAccessEntry: ['create', 'retrieve'],
-        isEntryOwner: ['destroy',],
+        isEntryOwner: ['destroy'],
     }
 
 
@@ -26,9 +26,9 @@ class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BudgetSerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        LoggedIn: ['create', 'list'],##TODO
-        isBudgetOwner: ['destroy','partial_update'],
-        CanAccessBudget: ['retrieve',],
+        LoggedIn: ['create', 'list'],
+        isBudgetOwner: ['destroy'],
+        CanAccessBudget: ['retrieve'],
     }
 
 
@@ -41,21 +41,6 @@ class BudgetViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs =  super().get_queryset()
         return qs.filter(participants__in=[self.request.user])
-    
-
-    def partial_update(self, request, *args, **kwargs):
-        try:
-            instance = self.queryset.get(pk=kwargs.get('pk'))
-        except models.Budget.DoesNotExist:
-            return Response({"errors": "Instance not found"},status=status.HTTP_404_NOT_FOUND)
-        new_username = request.data.get('new_user', None)
-        try:
-            new_part = User.objects.get(username=new_username)
-        except User.DoesNotExist:
-            return Response({"errors": "Username not found"},status=status.HTTP_404_NOT_FOUND)
-        instance.participants.add(new_part)
-        data = self.get_serializer(instance).data
-        return Response(data)
     
     @method_decorator(vary_on_headers('Authorization'))
     @method_decorator(cache_page(0))
@@ -71,6 +56,30 @@ class BudgetViewSet(viewsets.ModelViewSet):
         budget_data['entries'] = entry_arr
         return Response(budget_data)
 
+
+class InvitationViewSet(viewsets.ModelViewSet):
+    queryset = models.Budget.objects.all()
+    serializer_class = serializers.BudgetSerializer
+    permission_classes=(ActionBasedPermission,)
+    action_permissions = {
+        isBudgetOwner: ['partial_update'],
+    }
+
+    def partial_update(self, request, *args, **kwargs):
+        try:
+            instance = self.queryset.get(pk=kwargs.get('pk'))
+        except models.Budget.DoesNotExist:
+            return Response({"errors": "Instance not found"},status=status.HTTP_404_NOT_FOUND)
+
+        new_username = request.data.get('new_user', None)
+        try:
+            new_participant = User.objects.get(username=new_username)
+        except User.DoesNotExist:
+            return Response({"errors": "Username not found"},status=status.HTTP_404_NOT_FOUND)
+        
+        instance.participants.add(new_participant)
+        data = self.get_serializer(instance).data
+        return Response(data)    
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects.all()

@@ -31,7 +31,7 @@ class Entry(models.Model):
         verbose_name_plural = 'Entries'
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
+    budget = models.ForeignKey(Budget, related_name='entries', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
 

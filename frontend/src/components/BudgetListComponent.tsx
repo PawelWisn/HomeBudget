@@ -8,7 +8,7 @@ function buildBudgets(data:any, user_id:any){
     if(data){
         if (data.length>0){
         data.forEach((obj:any)=>{
-            budgets.push(<BudgetDetailComponent user_id={user_id} key={obj.id+obj.title} budget_title={obj.title} budget_id={obj.id} budget_owner={obj.owner} budget_total={obj.total} />)
+            budgets.push(<BudgetDetailComponent user_id={user_id} key={obj.id+obj.title} budget_title={obj.title} budget_id={obj.id} budget_owner={obj.owner} budget_total={obj.total} entries={obj.entries} />)
         })}}
     return budgets;
 }
@@ -28,14 +28,13 @@ function BudgetListComponent(props:any) {
         .then(function (response:any){
             setData(response.data.results);
         });
-     
+
         
-      }, []);
+        }, []);
 //TODO
     return (
         <div>
-            {buildBudgets(data, user_id)}      
-                  
+            {buildBudgets(data, user_id)}
         </div>
     );
 

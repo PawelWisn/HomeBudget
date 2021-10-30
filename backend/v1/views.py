@@ -45,16 +45,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     @method_decorator(vary_on_headers('Authorization'))
     @method_decorator(cache_page(0))
     def retrieve(self, request, *args, **kwargs):
-        budget_data = super().retrieve(request,*args, **kwargs).data
-        budget_id = budget_data.get('id', 0)
-        entries = models.Entry.objects.filter(budget__id=budget_id)
-        entry_serializer = serializers.EntryDetailSerializer
-        entry_arr = []
-        for entry in entries:
-            entry_data = entry_serializer(entry).data
-            entry_arr.append(entry_data)
-        budget_data['entries'] = entry_arr
-        return Response(budget_data)
+        return super().retrieve(request,*args, **kwargs)
 
 
 class InvitationViewSet(viewsets.ModelViewSet):

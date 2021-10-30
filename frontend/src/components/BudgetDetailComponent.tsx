@@ -28,22 +28,10 @@ function buildEntries(entries:any){
 }
 
 function BudgetDetailComponent(props:any) {
-    const {budget_id, budget_title, budget_total, user_id} = props;
-    const [entries, setEntries] = useState();
+    const {budget_id, budget_title, budget_total, user_id, entries} = props;
     const [categories, setCategories] = useState();
 
     useEffect(()=> {
-        axios.get(`http://localhost:8001/budget/${budget_id}/`,{
-            headers:{
-                "Authorization": "JWT " + getToken()
-            }
-        }).then(function (response){
-            return response;
-        })
-        .then(function (response:any){
-            setEntries(response.data.entries);
-        });
-
         axios.get(`http://localhost:8001/category/`)
         .then(function (response){
             return response;

@@ -30,9 +30,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class BudgetSerializer(serializers.ModelSerializer):
+    entries = EntryDetailSerializer(many=True, read_only=True)
+
     class Meta:
         model = models.Budget
-        fields = ('id', 'title', 'owner', 'total', 'participants')
+        fields = ('id', 'title', 'owner', 'total', 'participants', 'entries',)
         extra_kwargs = {'participants': {'required': False}}
 
     def create(self, validated_data):

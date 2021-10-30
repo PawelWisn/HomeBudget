@@ -31,7 +31,7 @@ function BudgetListComponent(props:any) {
 
         
         }, []);
-//TODO
+
     return (
         <div>
             {buildBudgets(data, user_id)}

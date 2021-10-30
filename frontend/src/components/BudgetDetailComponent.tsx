@@ -52,7 +52,7 @@ function BudgetDetailComponent(props:any) {
             setCategories(response.data.results);
         });
 
-    }, []);
+    }, [budget_id]);
 
 
     return (

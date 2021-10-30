@@ -13,7 +13,7 @@ function buildEntries(entries:any){
     if(entries_arr){
         if(entries){
             if (entries.length>0){
-                entries.map((obj:any)=>{
+                entries.forEach((obj:any)=>{
                 entries_arr.push(<EntryDetailComponent key={obj.id+obj.budget} entry_amount={obj.amount} entry_id={obj.id} entry_creator={obj.creator_name} entry_category={obj.category_name} />)
             })}
             else{

@@ -9,7 +9,7 @@ function buildCategoryOptions(categories:any){
     }
     if(categories){
         if (categories.length>0){
-            categories.map((obj:any)=>{
+            categories.forEach((obj:any)=>{
             cat_options.push(<option key={obj.id} value={obj.id}>{obj.name}</option>)
         })}
     }

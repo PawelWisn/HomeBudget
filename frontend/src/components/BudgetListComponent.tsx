@@ -7,7 +7,7 @@ function buildBudgets(data:any, user_id:any){
     let budgets: any = [];
     if(data){
         if (data.length>0){
-        data.map((obj:any)=>{
+        data.forEach((obj:any)=>{
             budgets.push(<BudgetDetailComponent user_id={user_id} key={obj.id+obj.title} budget_title={obj.title} budget_id={obj.id} budget_owner={obj.owner} budget_total={obj.total} />)
         })}}
     return budgets;

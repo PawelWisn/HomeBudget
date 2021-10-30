@@ -26,7 +26,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BudgetSerializer
     permission_classes=(ActionBasedPermission,)
     action_permissions = {
-        LoggedIn: ['create', 'list'],
+        LoggedIn: ['create', 'list'],##TODO
         isBudgetOwner: ['destroy','partial_update'],
         CanAccessBudget: ['retrieve',],
     }
@@ -40,12 +40,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         qs =  super().get_queryset()
-        final_qs =  super().get_queryset()
-        user = self.request.user
-        for q in qs:
-            if user not in q.participants.all():
-                final_qs = final_qs.exclude(id=q.id)
-        return final_qs
+        return qs.filter(participants__in=[self.request.user])
     
 
     def partial_update(self, request, *args, **kwargs):

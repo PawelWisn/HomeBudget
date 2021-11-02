@@ -8,8 +8,8 @@ function LoginComponent() {
     const history = useHistory();
 
     return (
-        <div>
-            <p>Login in to your account:</p>
+        <div className={"loginform"}>
+            <h5>Login in to your account</h5>
             <form id='loginForm'>
               <label>Username:</label><br/>
               <input type="text" id="log_username" name="username"/><br/>

@@ -4,8 +4,8 @@ import $ from 'jquery';
 function RegisterComponent() {
 
     return (
-        <div>
-            <p>Register new account:</p>
+        <div className={"registerform"}>
+            <h5>Register new account</h5>
             <form>
               <label>Username:</label><br/>
               <input type="text" id="reg_username" name="username"/><br/>

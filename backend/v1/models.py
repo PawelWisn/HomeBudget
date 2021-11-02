@@ -32,17 +32,11 @@ class Entry(models.Model):
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     budget = models.ForeignKey(Budget, related_name='entries', on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    amount = models.DecimalField(max_digits=128, decimal_places=2, default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
 
     def __str__(self) -> str:
         return str(self.creator) + ': ' + str(self.amount)
-
-    def save(self, *args, **kwargs):
-        self.budget.total = F('total') + self.amount
-        self.budget.save()
-        instance = super().save(*args, **kwargs)
-        return instance
 
     def delete(self, *args, **kwargs):
         self.budget.total = F('total') - self.amount

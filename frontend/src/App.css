@@ -37,13 +37,48 @@
   }
 }
 
-p{
-  margin-bottom: 5px;
+body{
+  background-color: #052c65;
+}
+
+.entry{
+  margin-top:1em;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.authform{
+  background-color: white;
+  margin-left: 35%;
+  margin-right: 35%;
+  margin-top: 5%;
+  padding: 2em;
+}
+
+.loginform, .registerform{
+  background-color: #9ec5fe;
+  margin-top: 2em;
+  padding: 1em;
+}
+
+.homepage{
+  margin-top: 2em;
+}
+
+.hometitle{
+  color:white;
+  font-weight: 900;
+}
+
+
+.homeuser{
+  color:white;
+  margin-bottom: 0.5em;
 }
 
 
 .budget{
-  background-color:gainsboro;
+  background-color: #9ed0fe;
   margin-right: 25%;
   margin-left: 25%;
   margin-bottom: 25px;
@@ -60,13 +95,10 @@ p{
 }
 
 .entries{
-  background-color:bisque;
-  margin-right: 20%;
-  margin-left: 20%;
+  /* margin-right: 5%;
+  margin-left: 20%; */
   margin-top: 15px;
-  margin-bottom: 15px;
-  padding-top: 5px;
-  padding-bottom: 15px;
+  margin-bottom: 15px; 
 }
 
 .inviteuser{
@@ -78,9 +110,9 @@ p{
 }
 
 .budgetcreate{
-  background-color:#bbbbbb;
+  background-color:#9ec5fe;
   margin-right: 25%;
   margin-left: 25%;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }

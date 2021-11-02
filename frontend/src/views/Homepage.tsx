@@ -28,9 +28,9 @@ function Homepage() {
     
 
     return (
-        <div>
-            <h1>Home Budget</h1>
-            <h2>{username}</h2>
+        <div className={'homepage'}>
+            <h1 className={"hometitle"}>Home Budget</h1>
+            <h2 className={"homeuser text-capitalize"}>{username}</h2>
             <LogoutComponent/>
             <CreateBudgetComponent user_id={userid}/>
             <BudgetListComponent user_id={userid}/>

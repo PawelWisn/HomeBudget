@@ -8,26 +8,33 @@ function LoginComponent() {
     const history = useHistory();
 
     return (
-        <div className={"loginform"}>
+        <div className={"authform"}>
             <h5>Login in to your account</h5>
-            <form id='loginForm'>
-              <label>Username:</label><br/>
-              <input type="text" id="log_username" name="username"/><br/>
-              <label>Password:</label><br/>
-              <input type="password" id="log_password" name="password"/><br/>
-              <input type="submit" value="Login" onClick={(e)=>{
-                e.preventDefault();
-                axios.post('http://localhost:8001/auth/jwt/create/',{
-                    "username": $('#log_username').val(),
-                    "password": $('#log_password').val(),
-                })
-                .then(function (response){
-                    return response;
-                })
-                .then(function (response:any){
-                    storeToken(response.data.access);
-                    history.push('/home');
-                })}}/>
+            <form>
+                <div className="mb-2 mt-3">
+                    <label htmlFor="inputUsername1" className="form-label ">Username</label>
+                    <input type="text" className="form-control" id="inputUsername1" aria-describedby="emailHelp"/>
+                </div>
+                <div className="mb-2">
+                    <label htmlFor="inputPassword1" className="form-label">Password</label>
+                    <input type="password" className="form-control" id="inputPassword1"/>
+                </div>
+                <div className="mb-1 mt-3">
+                    <button type="submit" className="btn btn-primary" onClick={(e)=>{
+                        e.preventDefault();
+                        axios.post('http://localhost:8001/auth/jwt/create/',{
+                            "username": $('#inputUsername1').val(),
+                            "password": $('#inputPassword1').val(),
+                        })
+                        .then(function (response){
+                            return response;
+                        })
+                        .then(function (response:any){
+                            storeToken(response.data.access);
+                            history.push('/home');
+                        })}}>Login
+                    </button>
+                </div>
             </form>
         </div>
     );

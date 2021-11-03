@@ -47,7 +47,7 @@ body{
   margin-right: 5%;
 }
 
-.authform{
+.autharea{
   background-color: white;
   margin-left: 35%;
   margin-right: 35%;
@@ -55,10 +55,16 @@ body{
   padding: 2em;
 }
 
-.loginform, .registerform{
+
+.authform{
   background-color: #9ec5fe;
   margin-top: 2em;
   padding: 1em;
+}
+
+.authform input{
+  text-align: left;
+  background-color: aliceblue;
 }
 
 .homepage{

@@ -33,7 +33,7 @@ function CreateEntryComponent(props:any) {
               <br/>
               <input type="submit" value="Create Entry" onClick={(e)=>{
                 e.preventDefault();
-                axios.post('http://localhost:8001/entry/',{
+                axios.post(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/entry/`,{
                     "amount": $(`#post_amount${budget_id}`).val(),
                     "category": $(`#post_category${budget_id}`).val(),
                     "creator": user_id,

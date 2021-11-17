@@ -10,7 +10,7 @@ function Homepage() {
     const [username, setUsername] = useState();
 
     useEffect(()=> {
-        axios.get('http://localhost:8001/auth/users/me/',{
+        axios.get(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/auth/users/me/`,{
             headers:{
                 "Authorization": "JWT " + getToken()
             }})

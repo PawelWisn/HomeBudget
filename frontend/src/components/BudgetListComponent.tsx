@@ -18,7 +18,7 @@ function BudgetListComponent(props:any) {
     const [data, setData] = useState()
 
     useEffect(()=> {
-        axios.get('http://localhost:8001/budget/',{
+        axios.get(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/budget/`,{
             headers:{
                 "Authorization": "JWT " + getToken()
             }

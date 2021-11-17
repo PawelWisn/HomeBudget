@@ -18,7 +18,7 @@ function RegisterComponent() {
                 <div className="mb-1 mt-3">
                     <button type="submit" className="btn btn-primary" onClick={(e)=>{
                         e.preventDefault();
-                        axios.post('http://localhost:8001/auth/users/',{
+                        axios.post(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/auth/users/`,{
                             "username": $('#inputUsername2').val(),
                             "password": $('#inputPassword2').val(),
                         })

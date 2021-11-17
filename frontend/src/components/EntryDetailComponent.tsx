@@ -24,7 +24,7 @@ function EntryDetailComponent(props:any) {
                     <div className={'col-md-4 d-flex align-items-center justify-content-center'}>
                             <input className={'btn btn-danger'} type="submit" value="Delete entry" onClick={(e)=>{
                             e.preventDefault();
-                            axios.delete(`http://localhost:8001/entry/${entry_id}/`,{
+                            axios.delete(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/entry/${entry_id}/`,{
                                 headers:{
                                     "Authorization": "JWT " + getToken()
                                 }

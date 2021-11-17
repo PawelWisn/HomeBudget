@@ -32,7 +32,7 @@ function BudgetDetailComponent(props:any) {
     const [categories, setCategories] = useState();
 
     useEffect(()=> {
-        axios.get(`http://localhost:8001/category/`)
+        axios.get(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/category/`)
         .then(function (response){
             return response;
         })
@@ -51,7 +51,7 @@ function BudgetDetailComponent(props:any) {
 
             <input type="submit" value="Delete budget" onClick={(e)=>{
                 e.preventDefault();
-                axios.delete(`http://localhost:8001/budget/${budget_id}/`,{
+                axios.delete(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/budget/${budget_id}/`,{
                     headers:{
                         "Authorization": "JWT " + getToken()
                     }
@@ -68,7 +68,7 @@ function BudgetDetailComponent(props:any) {
                 <input type="text" id={`invited${budget_id}`} name="invited" placeholder="username"/><br/>
                 <input type="submit" value="Invite user" onClick={(e)=>{
                     e.preventDefault();
-                    axios.patch(`http://localhost:8001/invitation/${budget_id}/`,{
+                    axios.patch(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/invitation/${budget_id}/`,{
                         "new_user": $(`#invited${budget_id}`).val(),
                     },{
                         headers:{

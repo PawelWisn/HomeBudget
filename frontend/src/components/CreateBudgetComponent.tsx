@@ -11,7 +11,7 @@ function CreateBudgetComponent(props:any) {
               <input type="text" id="create_budget" name="title" placeholder="New budget title"/><br/>
               <input type="submit" value="Create budget" onClick={(e)=>{
                 e.preventDefault();
-                axios.post('http://localhost:8001/budget/',{
+                axios.post(`${process.env.REACT_APP_API_PROTOCOL}://${process.env.REACT_APP_API_IP}:${process.env.REACT_APP_API_PORT}/budget/`,{
                     "title": $('#create_budget').val(),
                     "owner": user_id,
                 },{

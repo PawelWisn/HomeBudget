@@ -3,12 +3,10 @@ from . import models
 from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from .permissions import ActionBasedPermission, LoggedIn, isBudgetOwner, isEntryOwner, CanAccessEntry,CanAccessBudget
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
 from rest_framework.response import Response
-from django.db.models import Q
 
 
 class EntryViewSet(viewsets.ModelViewSet):
@@ -31,23 +29,10 @@ class BudgetViewSet(viewsets.ModelViewSet):
         CanAccessBudget: ['retrieve'],
     }
 
-
-    @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(10))
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-        
-    
     def get_queryset(self):
         qs =  super().get_queryset()
         return qs.filter(participants__in=[self.request.user])
     
-    @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(10))
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request,*args, **kwargs)
-
-
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = models.Budget.objects.all()
     serializer_class = serializers.BudgetSerializer

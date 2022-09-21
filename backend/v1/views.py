@@ -33,7 +33,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
 
 
     @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(0))
+    @method_decorator(cache_page(10))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
         
@@ -43,7 +43,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
         return qs.filter(participants__in=[self.request.user])
     
     @method_decorator(vary_on_headers('Authorization'))
-    @method_decorator(cache_page(0))
+    @method_decorator(cache_page(10))
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request,*args, **kwargs)
 
